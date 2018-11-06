@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <fstream>
 #include <stdexcept>
+#include <cmath>
 
 #include <JsonBox/Grammar.h>
 #include <JsonBox/Convert.h>
@@ -488,7 +489,12 @@ namespace JsonBox {
 
 		case DOUBLE: {
 				std::stringstream ss;
-				ss << *data.doubleValue;
+				double tmpDouble = *data.doubleValue;
+				if(std::isfinite(tmpDouble)){
+					ss << tmpDouble;
+				} else {
+					ss << Literals::NULL_STRING;
+				} 
 				return ss.str();
 			}
 
@@ -1188,7 +1194,12 @@ namespace JsonBox {
 		case Value::DOUBLE: {
 				std::streamsize precisionBackup = output.precision();
 				output.precision(17);
-				output << v.getDouble();
+				double tmpDouble = v.getDouble();
+				if(std::isfinite(tmpDouble)){
+					output << tmpDouble;
+				} else {
+					output << Literals::NULL_STRING;
+				} 
 				output.precision(precisionBackup);
 			}
 			break;
